@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "498771789851",
+    "project_id": "tit-for-tat-english",
+    "storage_bucket": "tit-for-tat-english.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:498771789851:android:f4707eea022242463e50be",
+        "android_client_info": {
+          "package_name": "com.summationworks.titfortat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "498771789851-ulth0qs1jlu2onmnvadinfevq7pnk3cb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7b3wRAQIGupFPjiXQC3DEc5q9iuMEE9s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "498771789851-mcerfbtag0u4cetr4hcsjnaait8b711j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "498771789851-7db8m10gucjrf7n3nq412f70q2naohn3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.titForTat"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
