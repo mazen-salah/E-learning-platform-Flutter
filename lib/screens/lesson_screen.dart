@@ -119,14 +119,16 @@ class _LessonScreenState extends State<LessonScreen> {
                     child: Column(
                       children: [
                         const Text(
-                          'المفرقات',
+                          'المرفقات',
                           style: TextStyle(
                             fontSize: 20,
                             color: Colors.white,
                           ),
                         ),
                         linkButton(
-                            widget.lessonTitle, widget.resources, Icons.book),
+                            "${widget.lessonTitle.split(' ')[0]} ${widget.lessonTitle.split(' ')[1]}\n${widget.lessonTitle.split(' ')[2]}",
+                            widget.resources,
+                            Icons.book),
                       ],
                     ),
                   ),

@@ -48,7 +48,10 @@ class _TestScreenState extends State<TestScreen> {
         ),
       ),
       appBar: AppBar(
-        title: Text('${widget.title} Exercise'),
+        title: Text(
+          '${widget.title.split(' ')[0]} ${widget.title.split(' ')[1]}\n ${widget.title.split(' ')[2]} Exercise',
+          textAlign: TextAlign.center,
+        ),
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.transparent,

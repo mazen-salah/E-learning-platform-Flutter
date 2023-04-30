@@ -10,6 +10,7 @@ import 'firebase_options.dart';
 import 'screens/login_screen.dart';
 
 List<dynamic> adminArray = [];
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(

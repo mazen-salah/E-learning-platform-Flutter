@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tit_for_tat/main.dart';
 import 'package:tit_for_tat/shared/admin.dart';
 import 'package:tit_for_tat/shared/functions/user_courses.dart';
 import 'package:tit_for_tat/screens/voucher_redeem.dart';
@@ -49,6 +50,28 @@ class _MyHomePageState extends State<MyHomePage> {
             },
             icon: const Icon(Icons.logout)),
         actions: [
+          if (adminArray.contains(FirebaseAuth.instance.currentUser!.uid))
+            ToggleButtons(
+              selectedColor: Colors.blue,
+              disabledColor: Colors.black,
+              fillColor: Colors.transparent,
+              splashColor: Colors.transparent,
+              hoverColor: Colors.transparent,
+              borderRadius: BorderRadius.circular(10),
+              borderColor: Colors.transparent,
+              selectedBorderColor: Colors.transparent,
+              onPressed: (int index) {
+                setState(() {
+                  admin = !admin;
+                });
+              },
+              isSelected: [admin],
+              children: const [
+                Icon(
+                  Icons.admin_panel_settings,
+                ),
+              ],
+            ),
           TextButton(
             child: Row(
               mainAxisSize: MainAxisSize.min,

@@ -11,9 +11,12 @@ Padding linkButton(String label, String linkId, IconData icon) {
   return Padding(
     padding: const EdgeInsets.all(4.0),
     child: ElevatedButton.icon(
-      label: Text(
-        label,
-        style: GoogleFonts.roboto(fontSize: 15, color: Colors.white),
+      label: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(
+          label,
+          style: GoogleFonts.roboto(fontSize: 15, color: Colors.white),
+        ),
       ),
       onPressed: () {
         _links.get().then((value) {
