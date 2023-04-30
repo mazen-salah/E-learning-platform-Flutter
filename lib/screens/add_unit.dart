@@ -161,7 +161,7 @@ class _AddUnitState extends State<AddUnit> {
                               .set(unitData);
                         }
 
-                        Navigator.pop(context);
+                        Navigator.of(_formKey.currentContext!).pop();
                       }
                     },
                     child: Text(_isEditing ? 'Update' : 'Add'),
