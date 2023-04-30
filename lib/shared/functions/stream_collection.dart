@@ -52,44 +52,48 @@ StreamBuilder<QuerySnapshot<Object?>> streamCollection(
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      IconButton(
-                        color: Colors.white,
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text('تعديل'),
-                                content: const Text('هل تريد تعديل الوحده؟'),
-                                actions: [
-                                  TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => AddUnit(
-                                              grade: collection.id,
-                                              data: collection.id,
-                                              unitId: snapshots
-                                                  .data!.docs[index].id,
+                      if (snapshots.data!.docs[index]['name']
+                          .toString()
+                          .toLowerCase()
+                          .contains('unit'))
+                        IconButton(
+                          color: Colors.white,
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text('تعديل'),
+                                  content: const Text('هل تريد تعديل الوحده؟'),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => AddUnit(
+                                                grade: collection.id,
+                                                data: collection.id,
+                                                unitId: snapshots
+                                                    .data!.docs[index].id,
+                                              ),
                                             ),
-                                          ),
-                                        );
-                                      },
-                                      child: const Text('نعم')),
-                                  TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text('لا')),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        icon: const Icon(Icons.edit),
-                      ),
+                                          );
+                                        },
+                                        child: const Text('نعم')),
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text('لا')),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          icon: const Icon(Icons.edit),
+                        ),
                       if (snapshots.data!.docs[index]['name']
                           .toString()
                           .toLowerCase()
