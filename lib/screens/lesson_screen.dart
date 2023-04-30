@@ -119,7 +119,7 @@ class _LessonScreenState extends State<LessonScreen> {
                     child: Column(
                       children: [
                         const Text(
-                          'Documents',
+                          'المفرقات',
                           style: TextStyle(
                             fontSize: 20,
                             color: Colors.white,
@@ -146,7 +146,7 @@ class _LessonScreenState extends State<LessonScreen> {
                           'testId': widget.testId,
                         });
                       },
-                      child: const Text('Exercises on this lesson')),
+                      child: const Text('تمارين على الدرس')),
                 const SizedBox(height: 20),
               ],
             ),

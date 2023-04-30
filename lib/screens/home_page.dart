@@ -1,5 +1,4 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -83,9 +82,9 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             if (FirebaseAuth.instance.currentUser != null)
               Text(
-                'Welcome ${FirebaseAuth.instance.currentUser!.displayName}',
-                style: GoogleFonts.sacramento(
-                  fontSize: 30,
+                'Welcome, ${FirebaseAuth.instance.currentUser!.displayName}',
+                style: GoogleFonts.alexandria(
+                  fontSize: 20,
                   color: Colors.white,
                 ),
               ),

@@ -66,13 +66,13 @@ class _UnitsScreenState extends State<UnitsScreen> {
                                     snapshots.data?.docs[index]['vocabVideo'] ==
                                         '')
                                   const Text(
-                                      'There are no lessons for this unit yet.'),
+                                      'لا يوجد درس متاح حالياً لهذه الوحدة'),
                                 if (snapshots.data?.docs[index]
                                             ['grammarVideo'] !=
                                         '' &&
                                     snapshots.data?.docs[index]['vocabVideo'] !=
                                         '')
-                                  const Text('Choose a lesson type: '),
+                                  const Text('اختار الدرس الذي تريد مشاهدته'),
                                 if (snapshots.data?.docs[index]['vocabVideo'] !=
                                     '')
                                   OutlinedButton(
