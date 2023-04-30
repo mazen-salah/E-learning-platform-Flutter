@@ -71,55 +71,37 @@ class _MyHomePageState extends State<MyHomePage> {
         elevation: 0,
         backgroundColor: Colors.transparent,
       ),
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Image.asset(
-                'assets/images/logo.png',
-                width: 200,
-                height: 200,
-              ),
-              if (FirebaseAuth.instance.currentUser != null)
-                Text(
-                  'Welcome ${FirebaseAuth.instance.currentUser!.displayName}',
-                  style: GoogleFonts.sacramento(
-                    fontSize: 30,
-                    color: Colors.white,
-                  ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Image.asset(
+              'assets/images/logo.png',
+              width: 200,
+              height: 200,
+            ),
+            if (FirebaseAuth.instance.currentUser != null)
+              Text(
+                'Welcome ${FirebaseAuth.instance.currentUser!.displayName}',
+                style: GoogleFonts.sacramento(
+                  fontSize: 30,
+                  color: Colors.white,
                 ),
-              const SizedBox(height: 20),
-              Expanded(
-                child: streamCollection(
-                  _grades,
-                  (context, snapshots, index) async {
-                    await getUserCourses(FirebaseAuth.instance.currentUser!.uid)
-                        .then((value) {
-                      courses = value;
-                    });
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        debugPrint(courses.toString());
-                        if (courses[index] == true) {
-                          return AlertDialog(
-                            title: Text(
-                              snapshots.data?.docs[index]['name'],
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.roboto(
-                                fontSize: 30,
-                              ),
-                            ),
-                            content: CategoryScreen(
-                              grade: snapshots.data?.docs[index]['name'],
-                              term1: snapshots.data?.docs[index]['term1'],
-                              term2: snapshots.data?.docs[index]['term2'],
-                            ),
-                          );
-                        }
-
+              ),
+            Expanded(
+              child: streamCollection(
+                _grades,
+                (context, snapshots, index) async {
+                  await getUserCourses(FirebaseAuth.instance.currentUser!.uid)
+                      .then((value) {
+                    courses = value;
+                  });
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      debugPrint(courses.toString());
+                      if (courses[index] == true) {
                         return AlertDialog(
                           title: Text(
                             snapshots.data?.docs[index]['name'],
@@ -128,157 +110,171 @@ class _MyHomePageState extends State<MyHomePage> {
                               fontSize: 30,
                             ),
                           ),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Text(
-                                'برجاء شراء الكورس اولا',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 20,
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                              Text(
-                                'سعر الكورس: ${snapshots.data?.docs[index]['price']} جنيه',
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ],
+                          content: CategoryScreen(
+                            grade: snapshots.data?.docs[index]['name'],
+                            term1: snapshots.data?.docs[index]['term1'],
+                            term2: snapshots.data?.docs[index]['term2'],
                           ),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: const Text('Cancel'),
+                        );
+                      }
+
+                      return AlertDialog(
+                        title: Text(
+                          snapshots.data?.docs[index]['name'],
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.roboto(
+                            fontSize: 30,
+                          ),
+                        ),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Text(
+                              'برجاء شراء الكورس اولا',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
                             ),
-                            TextButton(
-                              onPressed: () async {
-                                final user = _auth.currentUser;
-                                if (user == null) {
-                                  return;
-                                }
-                                final userData = await _firestore
-                                    .collection('users')
-                                    .doc(user.uid)
-                                    .get();
-                                if (!userData.exists) {
-                                  return;
-                                }
-                                final walletData = await _firestore
-                                    .collection('wallets')
-                                    .doc(user.uid)
-                                    .get();
-                                if (!walletData.exists) {
-                                  return;
-                                }
-                                final walletBalance =
-                                    walletData.data()?['balance'] ?? 0;
-                                final coursePrice =
-                                    snapshots.data?.docs[index]['price'] ?? 0;
-                                if (walletBalance < coursePrice) {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        title: const Text(
-                                          'Error',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontSize: 30, color: Colors.red),
-                                        ),
-                                        content: const Text(
-                                            'لا يوجد رصيد كافي في المحفظة برجاء شحن المحفظة و المحاولة مرة اخري',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(fontSize: 20)),
-                                        actions: [
-                                          TextButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) {
-                                                      return const VoucherRedeemPage();
-                                                    },
-                                                  ),
-                                                );
-                                              },
-                                              child: const Text('Ok')),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                  return;
-                                }
-                                final courses = userData.data()?['courses']
-                                    as List<dynamic>;
-                                courses[index] = true;
-                                await _firestore
-                                    .collection('users')
-                                    .doc(user.uid)
-                                    .update({
-                                  'courses': courses,
-                                });
-                                await _firestore
-                                    .collection('wallets')
-                                    .doc(user.uid)
-                                    .update(
-                                  {
-                                    'balance': walletBalance - coursePrice,
-                                  },
-                                );
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        title: const Text(
-                                          'Success',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontSize: 30,
-                                              color: Colors.green),
-                                        ),
-                                        content: const Text(
-                                            'تم شراء الكورس بنجاح',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(fontSize: 20)),
-                                        actions: [
-                                          TextButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                              },
-                                              child: const Text('Ok')),
-                                        ],
-                                      );
-                                    });
-                              },
-                              child: const Text('Buy'),
+                            const SizedBox(height: 20),
+                            Text(
+                              'سعر الكورس: ${snapshots.data?.docs[index]['price']} جنيه',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 20,
+                              ),
                             ),
                           ],
-                        );
-                      },
-                    );
-                  },
-                ),
-              ),
-              if (admin)
-                ElevatedButton.icon(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/generateVoucher');
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              final user = _auth.currentUser;
+                              if (user == null) {
+                                return;
+                              }
+                              final userData = await _firestore
+                                  .collection('users')
+                                  .doc(user.uid)
+                                  .get();
+                              if (!userData.exists) {
+                                return;
+                              }
+                              final walletData = await _firestore
+                                  .collection('wallets')
+                                  .doc(user.uid)
+                                  .get();
+                              if (!walletData.exists) {
+                                return;
+                              }
+                              final walletBalance =
+                                  walletData.data()?['balance'] ?? 0;
+                              final coursePrice =
+                                  snapshots.data?.docs[index]['price'] ?? 0;
+                              if (walletBalance < coursePrice) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text(
+                                        'Error',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: 30, color: Colors.red),
+                                      ),
+                                      content: const Text(
+                                          'لا يوجد رصيد كافي في المحفظة برجاء شحن المحفظة و المحاولة مرة اخري',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(fontSize: 20)),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) {
+                                                    return const VoucherRedeemPage();
+                                                  },
+                                                ),
+                                              );
+                                            },
+                                            child: const Text('Ok')),
+                                      ],
+                                    );
+                                  },
+                                );
+                                return;
+                              }
+                              final courses =
+                                  userData.data()?['courses'] as List<dynamic>;
+                              courses[index] = true;
+                              await _firestore
+                                  .collection('users')
+                                  .doc(user.uid)
+                                  .update({
+                                'courses': courses,
+                              });
+                              await _firestore
+                                  .collection('wallets')
+                                  .doc(user.uid)
+                                  .update(
+                                {
+                                  'balance': walletBalance - coursePrice,
+                                },
+                              );
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text(
+                                        'Success',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: 30, color: Colors.green),
+                                      ),
+                                      content: const Text(
+                                          'تم شراء الكورس بنجاح',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(fontSize: 20)),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Text('Ok')),
+                                      ],
+                                    );
+                                  });
+                            },
+                            child: const Text('Buy'),
+                          ),
+                        ],
+                      );
                     },
-                    icon: const Icon(Icons.monetization_on),
-                    label: const Text('Generate Voucher')),
-              linkButton('Telegram Channel', 'telegram', Icons.telegram),
-              linkButton('Share app', 'store', Icons.share),
-              const SizedBox(height: 20),
-            ],
-          ),
+                  );
+                },
+              ),
+            ),
+            if (admin)
+              ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/generateVoucher');
+                  },
+                  icon: const Icon(Icons.monetization_on),
+                  label: const Text('Generate Voucher')),
+            linkButton('Telegram Channel', 'telegram', Icons.telegram),
+            linkButton('Share app', 'store', Icons.share),
+            const SizedBox(height: 20),
+          ],
         ),
       ),
     );

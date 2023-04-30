@@ -45,7 +45,7 @@ StreamBuilder<QuerySnapshot<Object?>> streamCollection(
         );
       } else if (snapshots.hasData) {
         return Container(
-          padding: const EdgeInsets.all(16.0),
+          // padding: const EdgeInsets.all(16.0),
           margin: const EdgeInsets.all(16.0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
@@ -57,49 +57,49 @@ StreamBuilder<QuerySnapshot<Object?>> streamCollection(
               return Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  if (admin)
-                    if (snapshots.data!.docs[index]['name']
-                        .toString()
-                        .toLowerCase()
-                        .contains('unit'))
-                      IconButton(
-                        color: Colors.white,
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text('تعديل'),
-                                content: const Text('هل تريد تعديل الوحده؟'),
-                                actions: [
-                                  TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => AddUnit(
-                                              grade: collection.id,
-                                              data: collection.id,
-                                              unitId: snapshots
-                                                  .data!.docs[index].id,
-                                            ),
+                  if (!snapshots.data!.docs[index]['name']
+                          .toString()
+                          .toLowerCase()
+                          .contains('الصف') &&
+                      admin)
+                    IconButton(
+                      color: Colors.white,
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text('تعديل'),
+                              content: const Text('هل تريد تعديل الوحده؟'),
+                              actions: [
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => AddUnit(
+                                            grade: collection.id,
+                                            data: collection.id,
+                                            unitId:
+                                                snapshots.data!.docs[index].id,
                                           ),
-                                        );
-                                      },
-                                      child: const Text('نعم')),
-                                  TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text('لا')),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        icon: const Icon(Icons.edit),
-                      ),
+                                        ),
+                                      );
+                                    },
+                                    child: const Text('نعم')),
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('لا')),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      icon: const Icon(Icons.edit),
+                    ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: OutlinedButton(
@@ -133,10 +133,10 @@ StreamBuilder<QuerySnapshot<Object?>> streamCollection(
                       ),
                     ),
                   ),
-                  if (snapshots.data!.docs[index]['name']
+                  if (!snapshots.data!.docs[index]['name']
                           .toString()
                           .toLowerCase()
-                          .contains('unit') &&
+                          .contains('الصف') &&
                       admin)
                     IconButton(
                       onPressed: () {
@@ -152,7 +152,7 @@ StreamBuilder<QuerySnapshot<Object?>> streamCollection(
                                       collection
                                           .doc(snapshots.data!.docs[index].id)
                                           .delete();
-                                      if (snapshots.data!.docs[index]['name']
+                                      if (!snapshots.data!.docs[index]['name']
                                           .toString()
                                           .toLowerCase()
                                           .contains('unit')) {
