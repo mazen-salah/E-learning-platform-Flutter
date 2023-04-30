@@ -93,11 +93,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
               const SizedBox(height: 20),
-              Text(
-                'الصفوف الدراسيه',
-                style:
-                    GoogleFonts.sacramento(fontSize: 30, color: Colors.white),
-              ),
               Expanded(
                 child: streamCollection(
                   _grades,
@@ -112,21 +107,21 @@ class _MyHomePageState extends State<MyHomePage> {
                         debugPrint(courses.toString());
                         if (courses[index] == true) {
                           return AlertDialog(
-                              title: Text(
-                                snapshots.data?.docs[index]['name'],
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.roboto(
-                                  fontSize: 30,
-                                ),
+                            title: Text(
+                              snapshots.data?.docs[index]['name'],
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.roboto(
+                                fontSize: 30,
                               ),
-                              content: CategoryScreen(
-                                grade: snapshots.data?.docs[index]['name'],
-                                vocabData: snapshots.data?.docs[index]
-                                    ['vocabData'],
-                                grammarData: snapshots.data?.docs[index]
-                                    ['grammarData'],
-                              ));
+                            ),
+                            content: CategoryScreen(
+                              grade: snapshots.data?.docs[index]['name'],
+                              term1: snapshots.data?.docs[index]['term1'],
+                              term2: snapshots.data?.docs[index]['term2'],
+                            ),
+                          );
                         }
+
                         return AlertDialog(
                           title: Text(
                             snapshots.data?.docs[index]['name'],
@@ -135,12 +130,25 @@ class _MyHomePageState extends State<MyHomePage> {
                               fontSize: 30,
                             ),
                           ),
-                          content: const Text(
-                            'Please buy this course to access it',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Text(
+                                'برجاء شراء الكورس اولا',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              Text(
+                                'سعر الكورس: ${snapshots.data?.docs[index]['price']} جنيه',
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ],
                           ),
                           actions: [
                             TextButton(
@@ -175,21 +183,38 @@ class _MyHomePageState extends State<MyHomePage> {
                                     snapshots.data?.docs[index]['price'] ?? 0;
                                 if (walletBalance < coursePrice) {
                                   showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                          title: const Text('Error'),
-                                          content: const Text(
-                                              'You don\'t have enough money in your wallet'),
-                                          actions: [
-                                            TextButton(
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                child: const Text('Ok')),
-                                          ],
-                                        );
-                                      });
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text(
+                                          'Error',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 30, color: Colors.red),
+                                        ),
+                                        content: const Text(
+                                            'لا يوجد رصيد كافي في المحفظة برجاء شحن المحفظة و المحاولة مرة اخري',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(fontSize: 20)),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                                Navigator.pop(context);
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) {
+                                                      return const VoucherRedeemPage();
+                                                    },
+                                                  ),
+                                                );
+                                              },
+                                              child: const Text('Ok')),
+                                        ],
+                                      );
+                                    },
+                                  );
                                   return;
                                 }
                                 final courses = userData.data()?['courses']
@@ -204,19 +229,30 @@ class _MyHomePageState extends State<MyHomePage> {
                                 await _firestore
                                     .collection('wallets')
                                     .doc(user.uid)
-                                    .update({
-                                  'balance': walletBalance - coursePrice,
-                                });
+                                    .update(
+                                  {
+                                    'balance': walletBalance - coursePrice,
+                                  },
+                                );
                                 showDialog(
                                     context: context,
                                     builder: (context) {
                                       return AlertDialog(
-                                        title: const Text('Success'),
+                                        title: const Text(
+                                          'Success',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 30,
+                                              color: Colors.green),
+                                        ),
                                         content: const Text(
-                                            'Course bought successfully'),
+                                            'تم شراء الكورس بنجاح',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(fontSize: 20)),
                                         actions: [
                                           TextButton(
                                               onPressed: () {
+                                                Navigator.pop(context);
                                                 Navigator.pop(context);
                                               },
                                               child: const Text('Ok')),

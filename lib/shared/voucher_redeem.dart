@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
+import 'package:tit_for_tat/shared/widgets/link_button.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 // Firestore collections
 CollectionReference vouchersCollection =
@@ -239,6 +241,8 @@ class _VoucherRedeemPageState extends State<VoucherRedeemPage> {
       appBar: AppBar(
         title: const Text('Redeem Voucher'),
         centerTitle: true,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -267,8 +271,8 @@ class _VoucherRedeemPageState extends State<VoucherRedeemPage> {
               style: TextStyle(fontSize: 18.0),
             ),
             const SizedBox(height: 8.0),
-            SizedBox(
-              width: 200,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
               child: TextFormField(
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -303,7 +307,26 @@ class _VoucherRedeemPageState extends State<VoucherRedeemPage> {
                   ? const CircularProgressIndicator(
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                     )
-                  : const Text('Redeem'),
+                  : Center(child: const Text('Redeem')),
+            ),
+            Center(
+              child: Container(
+                margin: const EdgeInsets.only(top: 16),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.black38,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text("تواصل معنا للاشتراك",
+                        style: TextStyle(fontSize: 16, color: Colors.white)),
+                    linkButton("whatsapp", "whatsapp", Icons.chat_outlined),
+                    linkButton("phone", "phone", Icons.phone),
+                  ],
+                ),
+              ),
             ),
           ],
         ),

@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 
 class CategoryScreen extends StatelessWidget {
   final String grade;
-  final String vocabData;
-  final String grammarData;
+  final String term1;
+  final String term2;
   const CategoryScreen(
-      {Key? key,
-      required this.grade,
-      required this.vocabData,
-      required this.grammarData})
+      {Key? key, required this.grade, required this.term1, required this.term2})
       : super(key: key);
 
   @override
@@ -27,9 +24,9 @@ class CategoryScreen extends StatelessWidget {
             ),
             onPressed: () {
               Navigator.pushNamed(context, '/units',
-                  arguments: {'grade': grade, 'data': vocabData});
+                  arguments: {'grade': grade, 'data': term1});
             },
-            child: const Text('Vocabulary')),
+            child: const Text('الترم الأول')),
         OutlinedButton(
             style: OutlinedButton.styleFrom(
               foregroundColor: Colors.white,
@@ -40,9 +37,9 @@ class CategoryScreen extends StatelessWidget {
             ),
             onPressed: () {
               Navigator.pushNamed(context, '/units',
-                  arguments: {'grade': grade, 'data': grammarData});
+                  arguments: {'grade': grade, 'data': term2});
             },
-            child: const Text('Grammar')),
+            child: const Text('الترم الثاني')),
       ],
     );
   }

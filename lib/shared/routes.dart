@@ -54,8 +54,8 @@ final Map<String, WidgetBuilder> routes = {
 
     return CategoryScreen(
       grade: grade,
-      vocabData: vocabData,
-      grammarData: grammarData,
+      term1: vocabData,
+      term2: grammarData,
     );
   },
 };

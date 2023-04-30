@@ -242,11 +242,14 @@ class _TestScreenState extends State<TestScreen> {
                                                       });
                                                 }
                                               },
-                                              child: Text(
-                                                options[i],
-                                                style: const TextStyle(
-                                                  fontSize: 20,
-                                                  color: Colors.black,
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  options[i],
+                                                  style: const TextStyle(
+                                                    fontSize: 20,
+                                                    color: Colors.black,
+                                                  ),
                                                 ),
                                               ),
                                             ),

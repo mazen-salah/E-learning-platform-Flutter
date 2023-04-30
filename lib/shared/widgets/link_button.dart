@@ -22,7 +22,14 @@ Padding linkButton(String label, String linkId, IconData icon) {
           } else if (linkId == 'store') {
             Share.share(value[linkId].toString());
           } else {
-            launchUrl(Uri.parse(value[linkId].toString()));
+            try {
+              launchUrl(Uri.parse(value[linkId].toString()));
+            } catch (e) {
+              AlertDialog(
+                title: const Text('Error'),
+                content: Text(e.toString()),
+              );
+            }
           }
         });
       },

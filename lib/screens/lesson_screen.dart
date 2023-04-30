@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:tit_for_tat/shared/admin.dart';
 import 'package:tit_for_tat/shared/color.dart';
 import 'package:tit_for_tat/shared/widgets/link_button.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -8,8 +11,9 @@ class LessonScreen extends StatefulWidget {
   final String lessonTitle;
   final String resources;
   final String testId;
+  bool questionsAvailable = false;
 
-  const LessonScreen(
+  LessonScreen(
       {Key? key,
       required this.videoUrl,
       required this.lessonTitle,
@@ -44,6 +48,21 @@ class _LessonScreenState extends State<LessonScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final tests = FirebaseFirestore.instance.collection('tests');
+    final questions = tests.doc(widget.testId).collection('questions');
+
+    questions.get().then((querySnapshot) {
+      if (querySnapshot.size == 0) {
+        debugPrint('No questions found.');
+      } else {
+        debugPrint('Found ${querySnapshot.size} questions.');
+        setState(() {
+          widget.questionsAvailable = true;
+        });
+      }
+    }).catchError((error) {
+      debugPrint('Failed to load questions: $error');
+    });
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -111,20 +130,21 @@ class _LessonScreenState extends State<LessonScreen> {
               ),
             ),
           Expanded(child: Container()),
-          OutlinedButton(
-              style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.black38,
-                  side: const BorderSide(color: Colors.white, width: 2),
-                  shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20)))),
-              onPressed: () {
-                Navigator.pushNamed(context, '/test', arguments: {
-                  'title': widget.lessonTitle,
-                  'testId': widget.testId,
-                });
-              },
-              child: const Text('Exercises on this lesson')),
+          if (widget.questionsAvailable || admin)
+            OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.black38,
+                    side: const BorderSide(color: Colors.white, width: 2),
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20)))),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/test', arguments: {
+                    'title': widget.lessonTitle,
+                    'testId': widget.testId,
+                  });
+                },
+                child: const Text('Exercises on this lesson')),
           const SizedBox(height: 20),
         ],
       ),

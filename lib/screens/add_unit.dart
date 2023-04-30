@@ -4,7 +4,14 @@ import 'package:flutter/material.dart';
 class AddUnit extends StatefulWidget {
   final String grade;
   final String data;
-  const AddUnit({super.key, required this.grade, required this.data});
+  final String? unitId;
+
+  const AddUnit({
+    Key? key,
+    required this.grade,
+    required this.data,
+    this.unitId,
+  }) : super(key: key);
 
   @override
   State<AddUnit> createState() => _AddUnitState();
@@ -13,15 +20,51 @@ class AddUnit extends StatefulWidget {
 class _AddUnitState extends State<AddUnit> {
   final _formKey = GlobalKey<FormState>();
   final _lessonTitleController = TextEditingController();
-  final _videoUrlController = TextEditingController();
-  final _resourcesController = TextEditingController();
+  final _vocabVideoUrlController = TextEditingController();
+  final _grammarVideoUrlController = TextEditingController();
+  final _vocabResourcesController = TextEditingController();
+  final _grammarResourcesController = TextEditingController();
+
+  bool get _isEditing => widget.unitId != null;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (_isEditing) {
+      _loadUnitData();
+    }
+  }
 
   @override
   void dispose() {
     _lessonTitleController.dispose();
-    _videoUrlController.dispose();
-    _resourcesController.dispose();
+    _vocabVideoUrlController.dispose();
+    _vocabResourcesController.dispose();
+    _grammarVideoUrlController.dispose();
+    _grammarResourcesController.dispose();
     super.dispose();
+  }
+
+  void _loadUnitData() async {
+    debugPrint(widget.data);
+    final unitSnapshot = await FirebaseFirestore.instance
+        .collection(widget.data)
+        .doc(widget.unitId)
+        .get();
+    debugPrint(widget.unitId);
+
+    if (unitSnapshot.exists && unitSnapshot.data() != null) {
+      final unitData = unitSnapshot.data()!;
+
+      _lessonTitleController.text = unitData['name'] ?? '';
+      _vocabVideoUrlController.text = unitData['vocabVideo'] ?? '';
+      _vocabResourcesController.text = unitData['vocabResources'] ?? '';
+      _grammarVideoUrlController.text = unitData['grammarVideo'] ?? '';
+      _grammarResourcesController.text = unitData['grammarResources'] ?? '';
+    } else {
+      debugPrint('Error: Unit snapshot does not exist or has no data');
+    }
   }
 
   @override
@@ -30,7 +73,7 @@ class _AddUnitState extends State<AddUnit> {
         FirebaseFirestore.instance.collection(widget.data);
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.grade),
+        title: Text(_isEditing ? 'Edit Unit' : 'Add Unit'),
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -44,65 +87,88 @@ class _AddUnitState extends State<AddUnit> {
           ),
           padding: const EdgeInsets.all(20),
           margin: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                controller: _lessonTitleController,
-                decoration: const InputDecoration(
-                  labelText: 'Lesson Title',
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: _lessonTitleController,
+                  decoration: const InputDecoration(
+                    labelText: 'Lesson Title',
+                  ),
+                  validator: (value) {
+                    if (value == null ||
+                        value.isEmpty ||
+                        value.split(' ').length < 2) {
+                      return 'Please enter a lesson title with at least 2 words \n[ex: Unit X ] ';
+                    }
+                    return null;
+                  },
                 ),
-                validator: (value) {
-                  if (value == null ||
-                      value.isEmpty ||
-                      value.split(' ').length < 3) {
-                    return 'Please enter a lesson title with at least 3 words \n[ex: Unit X Vocabulary or Unit X Grammar] ';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _videoUrlController,
-                decoration: const InputDecoration(
-                  labelText: 'Video URL',
+                TextFormField(
+                  controller: _vocabVideoUrlController,
+                  decoration: const InputDecoration(
+                    labelText: 'Vocabulary Video URL',
+                  ),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a video URL';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _resourcesController,
-                decoration: const InputDecoration(
-                  labelText: 'Resources',
+                TextFormField(
+                  controller: _vocabResourcesController,
+                  decoration: const InputDecoration(
+                    labelText: 'Vocabulary Resources',
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  String docId = _lessonTitleController.text
-                      .replaceAll(' ', '-')
-                      .toLowerCase();
-                  DateTime now = DateTime.now();
-                  String date =
-                      '${now.year}-${now.month}-${now.day}-${now.hour}-${now.minute}-${now.second}';
-                  String testId = '$docId-$date';
+                TextFormField(
+                  controller: _grammarVideoUrlController,
+                  decoration: const InputDecoration(
+                    labelText: 'Grammar Video URL',
+                  ),
+                ),
+                TextFormField(
+                  controller: _grammarResourcesController,
+                  decoration: const InputDecoration(
+                    labelText: 'Grammar Resources',
+                  ),
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        DateTime now = DateTime.now();
+                        String formattedDate =
+                            '${now.day}-${now.month}-${now.year}-${now.hour}-${now.minute}-${now.second}';
+                        final unitData = {
+                          'name': _lessonTitleController.text,
+                          'vocabVideo': _vocabVideoUrlController.text,
+                          'vocabResources': _vocabResourcesController.text,
+                          'grammarVideo': _grammarVideoUrlController.text,
+                          'grammarResources': _grammarResourcesController.text,
+                          'vocabTestId':
+                              '${_lessonTitleController.text.replaceAll(' ', '-')}-vocab-test-$formattedDate',
+                          'grammarTestId':
+                              '${_lessonTitleController.text.replaceAll(' ', '-')}-grammar-test-$formattedDate',
+                        };
 
-                  if (_formKey.currentState!.validate()) {
-                    gradeCollection.doc(docId).set({
-                      'name': _lessonTitleController.text,
-                      'video': _videoUrlController.text,
-                      'resources': _resourcesController.text,
-                      'testId': testId,
-                    });
-                    Navigator.pop(context);
-                  }
-                },
-                child: const Text('Submit'),
-              ),
-            ],
+                        if (_isEditing) {
+                          await gradeCollection
+                              .doc(widget.unitId)
+                              .update(unitData);
+                        } else {
+                          await gradeCollection
+                              .doc(_lessonTitleController.text
+                                  .replaceAll(' ', '-'))
+                              .set(unitData);
+                        }
+
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: Text(_isEditing ? 'Update' : 'Add'),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

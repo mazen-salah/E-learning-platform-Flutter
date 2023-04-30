@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tit_for_tat/shared/admin.dart';
-import 'package:tit_for_tat/shared/functions/open_lesson.dart';
 import '../shared/functions/stream_collection.dart';
 import 'add_unit.dart';
 
@@ -27,11 +26,95 @@ class _UnitsScreenState extends State<UnitsScreen> {
         ),
         body: Column(
           children: [
+            const Divider(
+              color: Colors.white,
+              thickness: 2,
+            ),
+            const Text(
+              "Units",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 40,
+              ),
+            ),
+            const Divider(
+              color: Colors.white,
+              thickness: 2,
+            ),
             Expanded(
               child: streamCollection(
                 gradeCollection,
                 (context, snapshots, index) {
-                  openLesson(context, snapshots, index);
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                            title: Center(
+                                child:
+                                    Text(snapshots.data?.docs[index]['name'])),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (snapshots.data?.docs[index]
+                                            ['grammarVideo'] ==
+                                        '' &&
+                                    snapshots.data?.docs[index]['vocabVideo'] ==
+                                        '')
+                                  const Text(
+                                      'There are no lessons for this unit yet.'),
+                                if (snapshots.data?.docs[index]
+                                            ['grammarVideo'] !=
+                                        '' &&
+                                    snapshots.data?.docs[index]['vocabVideo'] !=
+                                        '')
+                                  const Text('Choose a lesson type: '),
+                                if (snapshots.data?.docs[index]['vocabVideo'] !=
+                                    '')
+                                  OutlinedButton(
+                                      onPressed: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          '/lessons',
+                                          arguments: {
+                                            'videoUrl': snapshots.data
+                                                ?.docs[index]['vocabVideo'],
+                                            'lessonTitle': snapshots
+                                                    .data?.docs[index]['name'] +
+                                                ' Vocabulary',
+                                            'resources': snapshots.data
+                                                ?.docs[index]['vocabResources'],
+                                            'testId': snapshots.data
+                                                ?.docs[index]['vocabTestId'],
+                                          },
+                                        );
+                                      },
+                                      child: const Text('Vocabulary')),
+                                if (snapshots.data?.docs[index]
+                                        ['grammarVideo'] !=
+                                    '')
+                                  OutlinedButton(
+                                      onPressed: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          '/lessons',
+                                          arguments: {
+                                            'videoUrl': snapshots.data
+                                                ?.docs[index]['grammarVideo'],
+                                            'lessonTitle': snapshots
+                                                    .data?.docs[index]['name'] +
+                                                ' Grammar',
+                                            'resources':
+                                                snapshots.data?.docs[index]
+                                                    ['grammarResources'],
+                                            'testId': snapshots.data
+                                                ?.docs[index]['grammarTestId'],
+                                          },
+                                        );
+                                      },
+                                      child: const Text('Grammar')),
+                              ],
+                            ));
+                      });
                 },
               ),
             ),
