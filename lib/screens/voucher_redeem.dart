@@ -200,7 +200,7 @@ class _VoucherRedeemPageState extends State<VoucherRedeemPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text("تواصل معنا للاشتراك",
+                    const Text("تواصل معنا للدفع",
                         style: TextStyle(fontSize: 16, color: Colors.white)),
                     linkButton("whatsapp", "whatsapp", Icons.chat_outlined),
                     linkButton("phone", "phone", Icons.phone),
