@@ -5,6 +5,7 @@ import 'package:tit_for_tat/shared/color.dart';
 import 'package:tit_for_tat/shared/widgets/link_button.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
+// ignore: must_be_immutable
 class LessonScreen extends StatefulWidget {
   final String videoUrl;
   final String lessonTitle;
