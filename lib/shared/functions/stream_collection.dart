@@ -134,9 +134,10 @@ StreamBuilder<QuerySnapshot<Object?>> streamCollection(
                     ),
                   ),
                   if (snapshots.data!.docs[index]['name']
-                      .toString()
-                      .toLowerCase()
-                      .contains('unit'))
+                          .toString()
+                          .toLowerCase()
+                          .contains('unit') &&
+                      admin)
                     IconButton(
                       onPressed: () {
                         showDialog(
