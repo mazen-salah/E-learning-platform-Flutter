@@ -76,6 +76,14 @@ class _UnitsScreenState extends State<UnitsScreen> {
                                 if (snapshots.data?.docs[index]['vocabVideo'] !=
                                     '')
                                   OutlinedButton(
+                                      style: OutlinedButton.styleFrom(
+                                        foregroundColor: Colors.white,
+                                        backgroundColor: Colors.blueGrey[900],
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                      ),
                                       onPressed: () {
                                         Navigator.pushNamed(
                                           context,
@@ -98,6 +106,14 @@ class _UnitsScreenState extends State<UnitsScreen> {
                                         ['grammarVideo'] !=
                                     '')
                                   OutlinedButton(
+                                      style: OutlinedButton.styleFrom(
+                                        foregroundColor: Colors.white,
+                                        backgroundColor: Colors.blueGrey[900],
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                      ),
                                       onPressed: () {
                                         Navigator.pushNamed(
                                           context,

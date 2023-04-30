@@ -17,6 +17,8 @@ class TestScreen extends StatefulWidget {
 
 class _TestScreenState extends State<TestScreen> {
   CollectionReference tests = FirebaseFirestore.instance.collection('tests');
+  ScrollController scrollController = ScrollController();
+
   List<int?> selectedIndexes = [];
 
   @override
@@ -69,6 +71,7 @@ class _TestScreenState extends State<TestScreen> {
                   return const Center(child: Center(child: Text('No Data')));
                 } else {
                   return ListView.builder(
+                    controller: scrollController,
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (BuildContext context, int index) {
                       if (selectedIndexes.length <= index) {
@@ -193,6 +196,10 @@ class _TestScreenState extends State<TestScreen> {
 
                                                 if (options[i] ==
                                                     data['answer']) {
+                                                  double scrollPosition =
+                                                      scrollController
+                                                          .position.pixels;
+
                                                   showDialog(
                                                       context: context,
                                                       builder: (context) {
@@ -205,22 +212,51 @@ class _TestScreenState extends State<TestScreen> {
                                                                       .green),
                                                             ),
                                                           ),
-                                                          content: Text(
-                                                            data['correctMessage'] ==
-                                                                    ''
-                                                                ? 'Good!'
-                                                                : data[
-                                                                    'correctMessage']!,
-                                                            textAlign: TextAlign
-                                                                .center,
+                                                          content: Column(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            children: [
+                                                              Text(
+                                                                data['correctMessage'] ==
+                                                                        ''
+                                                                    ? 'Good!'
+                                                                    : data[
+                                                                        'correctMessage']!,
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                              ),
+                                                              TextButton(
+                                                                onPressed: () {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                  scrollController
+                                                                      .jumpTo(
+                                                                          scrollPosition);
+                                                                },
+                                                                child: const Text(
+                                                                    'Continue'),
+                                                              ),
+                                                            ],
                                                           ),
                                                         );
-                                                      });
+                                                      }).then((value) {
+                                                    scrollController
+                                                        .jumpTo(scrollPosition);
+                                                  });
                                                 } else {
+                                                  double scrollPosition =
+                                                      scrollController
+                                                          .position.pixels;
+
                                                   showDialog(
                                                       context: context,
                                                       builder: (context) {
+                                                        scrollController.jumpTo(
+                                                            scrollPosition);
                                                         return AlertDialog(
+                                                          scrollable: true,
                                                           title: const Center(
                                                             child: Text(
                                                               'Wrong !',
@@ -229,21 +265,44 @@ class _TestScreenState extends State<TestScreen> {
                                                                       .red),
                                                             ),
                                                           ),
-                                                          content: Text(
-                                                            data['incorrectMessage'] ==
-                                                                    ''
-                                                                ? 'Try again!'
-                                                                : data[
-                                                                    'incorrectMessage'],
-                                                            textAlign: TextAlign
-                                                                .center,
+                                                          content: Column(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            children: [
+                                                              Text(
+                                                                data['incorrectMessage'] ==
+                                                                        ''
+                                                                    ? 'Try again!'
+                                                                    : data[
+                                                                        'incorrectMessage'],
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                              ),
+                                                              TextButton(
+                                                                onPressed: () {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                  scrollController
+                                                                      .jumpTo(
+                                                                          scrollPosition);
+                                                                },
+                                                                child: const Text(
+                                                                    'continue'),
+                                                              ),
+                                                            ],
                                                           ),
                                                         );
-                                                      });
+                                                      }).then((value) {
+                                                    scrollController
+                                                        .jumpTo(scrollPosition);
+                                                  });
                                                 }
                                               },
                                               child: Padding(
-                                                padding: const EdgeInsets.all(8.0),
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
                                                 child: Text(
                                                   options[i],
                                                   style: const TextStyle(
