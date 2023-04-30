@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:tit_for_tat/shared/admin.dart';
+import 'package:tit_for_tat/shared/color.dart';
 import '../shared/functions/stream_collection.dart';
 import 'add_unit.dart';
 
@@ -27,18 +29,21 @@ class _UnitsScreenState extends State<UnitsScreen> {
         body: Column(
           children: [
             const Divider(
-              color: Colors.white,
+              color: Colors.white38,
               thickness: 2,
             ),
-            const Text(
-              "Units",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 40,
+            Container(
+              color: myColor.withOpacity(0.5),
+              child: Center(
+                child: Text(
+                  "Units",
+                  style:
+                      GoogleFonts.sacramento(color: Colors.white, fontSize: 45),
+                ),
               ),
             ),
             const Divider(
-              color: Colors.white,
+              color: Colors.white38,
               thickness: 2,
             ),
             Expanded(

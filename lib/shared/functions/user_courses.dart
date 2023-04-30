@@ -8,7 +8,7 @@ Future<List<bool>> getUserCourses(String userId) async {
     return [];
   }
   final courses = userData.data()!['courses'] as List<dynamic>;
-  
+
   return courses.map<bool>((course) => course as bool).toList();
 }
 

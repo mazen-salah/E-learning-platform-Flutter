@@ -56,137 +56,48 @@ StreamBuilder<QuerySnapshot<Object?>> streamCollection(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   if (admin)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (snapshots.data!.docs[index]['name']
-                            .toString()
-                            .toLowerCase()
-                            .contains('unit'))
-                          IconButton(
-                            color: Colors.white,
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: const Text('تعديل'),
-                                    content:
-                                        const Text('هل تريد تعديل الوحده؟'),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) => AddUnit(
-                                                  grade: collection.id,
-                                                  data: collection.id,
-                                                  unitId: snapshots
-                                                      .data!.docs[index].id,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          child: const Text('نعم')),
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text('لا')),
-                                    ],
-                                  );
-                                },
+                    if (snapshots.data!.docs[index]['name']
+                        .toString()
+                        .toLowerCase()
+                        .contains('unit'))
+                      IconButton(
+                        color: Colors.white,
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text('تعديل'),
+                                content: const Text('هل تريد تعديل الوحده؟'),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => AddUnit(
+                                              grade: collection.id,
+                                              data: collection.id,
+                                              unitId: snapshots
+                                                  .data!.docs[index].id,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: const Text('نعم')),
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('لا')),
+                                ],
                               );
                             },
-                            icon: const Icon(Icons.edit),
-                          ),
-                        if (snapshots.data!.docs[index]['name']
-                            .toString()
-                            .toLowerCase()
-                            .contains('unit'))
-                          IconButton(
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: const Text('حذف'),
-                                    content: const Text('هل تريد حذف الوحده؟'),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () async {
-                                            collection
-                                                .doc(snapshots
-                                                    .data!.docs[index].id)
-                                                .delete();
-                                            if (snapshots
-                                                .data!.docs[index]['name']
-                                                .toString()
-                                                .toLowerCase()
-                                                .contains('unit')) {
-                                              String id = snapshots.data!
-                                                  .docs[index]['vocabTestId'];
-                                              String id2 = snapshots.data!
-                                                  .docs[index]['grammarTestId'];
-                                              CollectionReference<Object?>
-                                                  tests = FirebaseFirestore
-                                                      .instance
-                                                      .collection('tests');
-                                              await tests
-                                                  .doc(id)
-                                                  .collection('questions')
-                                                  .get()
-                                                  .then((querySnapshot) {
-                                                for (var doc
-                                                    in querySnapshot.docs) {
-                                                  doc.reference.delete();
-                                                }
-                                              });
-                                              await tests
-                                                  .doc(id2)
-                                                  .collection('questions')
-                                                  .get()
-                                                  .then((querySnapshot) {
-                                                for (var doc
-                                                    in querySnapshot.docs) {
-                                                  doc.reference.delete();
-                                                }
-                                              });
-                                              await tests
-                                                  .doc(id)
-                                                  .delete()
-                                                  .then((value) => debugPrint(
-                                                      'Test Deleted'))
-                                                  .catchError((error) => debugPrint(
-                                                      'Failed to delete test: $error'));
-                                              await tests
-                                                  .doc(id2)
-                                                  .delete()
-                                                  .then((value) => debugPrint(
-                                                      'Test Deleted'))
-                                                  .catchError((error) => debugPrint(
-                                                      'Failed to delete test: $error'));
-                                            }
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text('نعم')),
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text('لا')),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                            icon: const Icon(Icons.delete),
-                            color: Colors.red,
-                          ),
-                      ],
-                    ),
+                          );
+                        },
+                        icon: const Icon(Icons.edit),
+                      ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: OutlinedButton(
@@ -220,6 +131,84 @@ StreamBuilder<QuerySnapshot<Object?>> streamCollection(
                       ),
                     ),
                   ),
+                  if (snapshots.data!.docs[index]['name']
+                      .toString()
+                      .toLowerCase()
+                      .contains('unit'))
+                    IconButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text('حذف'),
+                              content: const Text('هل تريد حذف الوحده؟'),
+                              actions: [
+                                TextButton(
+                                    onPressed: () async {
+                                      collection
+                                          .doc(snapshots.data!.docs[index].id)
+                                          .delete();
+                                      if (snapshots.data!.docs[index]['name']
+                                          .toString()
+                                          .toLowerCase()
+                                          .contains('unit')) {
+                                        String id = snapshots.data!.docs[index]
+                                            ['vocabTestId'];
+                                        String id2 = snapshots.data!.docs[index]
+                                            ['grammarTestId'];
+                                        CollectionReference<Object?> tests =
+                                            FirebaseFirestore.instance
+                                                .collection('tests');
+                                        await tests
+                                            .doc(id)
+                                            .collection('questions')
+                                            .get()
+                                            .then((querySnapshot) {
+                                          for (var doc in querySnapshot.docs) {
+                                            doc.reference.delete();
+                                          }
+                                        });
+                                        await tests
+                                            .doc(id2)
+                                            .collection('questions')
+                                            .get()
+                                            .then((querySnapshot) {
+                                          for (var doc in querySnapshot.docs) {
+                                            doc.reference.delete();
+                                          }
+                                        });
+                                        await tests
+                                            .doc(id)
+                                            .delete()
+                                            .then((value) =>
+                                                debugPrint('Test Deleted'))
+                                            .catchError((error) => debugPrint(
+                                                'Failed to delete test: $error'));
+                                        await tests
+                                            .doc(id2)
+                                            .delete()
+                                            .then((value) =>
+                                                debugPrint('Test Deleted'))
+                                            .catchError((error) => debugPrint(
+                                                'Failed to delete test: $error'));
+                                      }
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('نعم')),
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('لا')),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      icon: const Icon(Icons.delete),
+                      color: Colors.red,
+                    ),
                 ],
               );
             },
