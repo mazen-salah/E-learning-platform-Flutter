@@ -1,1 +1,1 @@
-bool admin = true;
+bool admin = false;

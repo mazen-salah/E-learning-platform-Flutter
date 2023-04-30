@@ -3,16 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tit_for_tat/screens/home_page.dart';
+import 'package:tit_for_tat/shared/admin.dart';
 import 'package:tit_for_tat/shared/color.dart';
 import 'package:tit_for_tat/shared/routes.dart';
 import 'firebase_options.dart';
 import 'screens/login_screen.dart';
 
+List<dynamic> adminArray = [];
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  adminArray = await FirebaseFirestore.instance
+      .collection('admin')
+      .doc('admin')
+      .get()
+      .then((value) => value.data()!['admin']);
   runApp(MyApp());
 }
 
@@ -59,6 +66,10 @@ class MyApp extends StatelessWidget {
             return const CircularProgressIndicator();
           } else if (snapshot.hasData) {
             _initializeWallet(snapshot.data!.uid);
+
+            if (adminArray.contains(snapshot.data!.uid)) {
+              admin = true;
+            }
             return const MyHomePage();
           } else {
             return const LoginPage();

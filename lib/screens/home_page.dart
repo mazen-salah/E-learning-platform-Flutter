@@ -8,7 +8,6 @@ import 'package:tit_for_tat/shared/admin.dart';
 import 'package:tit_for_tat/shared/functions/user_courses.dart';
 import 'package:tit_for_tat/screens/voucher_redeem.dart';
 import 'package:tit_for_tat/shared/widgets/category.dart';
-import '../shared/color.dart';
 import '../shared/functions/stream_collection.dart';
 import '../shared/widgets/link_button.dart';
 
@@ -43,7 +42,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor,
       appBar: AppBar(
         leading: IconButton(
             onPressed: () async {
