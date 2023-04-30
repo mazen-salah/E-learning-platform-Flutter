@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tit_for_tat/screens/lesson_screen.dart';
 import 'package:tit_for_tat/screens/login_screen.dart';
-import 'package:tit_for_tat/shared/voucher_redeem.dart';
 import '../screens/test_screen.dart';
 import '../screens/units_screen.dart';
 import '../screens/home_page.dart';
+import '../screens/voucher_generate.dart';
 import 'widgets/category.dart';
 
 final Map<String, WidgetBuilder> routes = {

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tit_for_tat/shared/admin.dart';
 import 'package:tit_for_tat/shared/functions/user_courses.dart';
-import 'package:tit_for_tat/shared/voucher_redeem.dart';
+import 'package:tit_for_tat/screens/voucher_redeem.dart';
 import 'package:tit_for_tat/shared/widgets/category.dart';
 import '../shared/color.dart';
 import '../shared/functions/stream_collection.dart';
