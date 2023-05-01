@@ -53,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
           if (adminArray.contains(FirebaseAuth.instance.currentUser!.uid))
             ToggleButtons(
               selectedColor: Colors.blue,
-              disabledColor: Colors.black,
+              disabledColor: Colors.white,
               fillColor: Colors.transparent,
               splashColor: Colors.transparent,
               hoverColor: Colors.transparent,

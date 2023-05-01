@@ -38,7 +38,7 @@ class _UnitsScreenState extends State<UnitsScreen> {
                 child: Text(
                   "Units",
                   style:
-                      GoogleFonts.sacramento(color: Colors.white, fontSize: 45),
+                      GoogleFonts.alexandria(color: Colors.white, fontSize: 30),
                 ),
               ),
             ),

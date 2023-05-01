@@ -52,7 +52,17 @@ class _VoucherGeneratePageState extends State<VoucherGeneratePage> {
               const SizedBox(height: 16),
               SizedBox(
                 width: 200,
-                child: TextField(
+                child: TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a voucher value';
+                    } else if (int.tryParse(value) == null) {
+                      return 'Please enter a valid number';
+                    } else if (int.tryParse(value) == 0) {
+                      return 'Please enter a number greater than 0';
+                    }
+                    return null;
+                  },
                   controller: _valueController,
                   keyboardType: TextInputType.number,
                 ),
