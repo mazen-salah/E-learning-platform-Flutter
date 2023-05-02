@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:tit_for_tat/shared/color.dart';
 
 class AddUnit extends StatefulWidget {
   final String grade;
@@ -97,54 +98,128 @@ class _AddUnitState extends State<AddUnit> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                TextFormField(
-                  controller: _lessonTitleController,
-                  decoration: const InputDecoration(
-                    labelText: 'Lesson Title',
+                Container(
+                  margin: const EdgeInsets.only(top: 20),
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: myColor.withOpacity(0.5),
                   ),
-                  validator: (value) {
-                    if (value == null ||
-                        value.isEmpty ||
-                        value.split(' ').length < 2) {
-                      return 'Please enter a lesson title with at least 2 words \n[ex: Unit X ] ';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  controller: _vocabVideoTitleController,
-                  decoration: const InputDecoration(
-                    labelText: 'Vocabulary Video Title',
-                  ),
-                ),
-                TextFormField(
-                  controller: _vocabVideoUrlController,
-                  decoration: const InputDecoration(
-                    labelText: 'Vocabulary Video URL',
-                  ),
-                ),
-                TextFormField(
-                  controller: _vocabResourcesController,
-                  decoration: const InputDecoration(
-                    labelText: 'Vocabulary Resources',
-                  ),
-                ),
-                TextFormField(
-                  controller: _grammarVideoTitleController,
-                  decoration: const InputDecoration(
-                    labelText: 'Grammar Video Title',
-                  ),
-                ),
-                TextFormField(
-                  controller: _grammarVideoUrlController,
-                  decoration: const InputDecoration(
-                    labelText: 'Grammar Video URL',
+                  child: Column(
+                    children: [
+                      const Center(
+                        child: Text(
+                          'Title',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      TextFormField(
+                        textAlign: TextAlign.center,
+                        controller: _lessonTitleController,
+                        decoration: const InputDecoration(
+                          labelText: 'Lesson Title',
+                        ),
+                        validator: (value) {
+                          if (value == null ||
+                              value.isEmpty ||
+                              value.split(' ').length < 2) {
+                            return 'Please enter a lesson title with at least 2 words \n[ex: Unit X ] ';
+                          }
+                          return null;
+                        },
+                      ),
+                    ],
                   ),
                 ),
-                TextFormField(
-                  controller: _grammarResourcesController,
-                  decoration: const InputDecoration(
-                    labelText: 'Grammar Resources',
+                Container(
+                  margin: const EdgeInsets.only(top: 20),
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: myColor.withOpacity(0.5),
+                  ),
+                  child: Column(
+                    children: [
+                      const Center(
+                        child: Text(
+                          'Vocabulary',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      TextFormField(
+                        textAlign: TextAlign.center,
+                        controller: _vocabVideoTitleController,
+                        decoration: const InputDecoration(
+                          labelText: 'Title',
+                        ),
+                      ),
+                      TextFormField(
+                        textAlign: TextAlign.center,
+                        controller: _vocabVideoUrlController,
+                        decoration: const InputDecoration(
+                          labelText: 'Video URL',
+                        ),
+                      ),
+                      TextFormField(
+                        textAlign: TextAlign.center,
+                        controller: _vocabResourcesController,
+                        decoration: const InputDecoration(
+                          labelText: 'Resources',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 20),
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: myColor.withOpacity(0.5),
+                  ),
+                  child: Column(
+                    children: [
+                      const Center(
+                        child: Text(
+                          'Grammar',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      TextFormField(
+                        textAlign: TextAlign.center,
+                        controller: _grammarVideoTitleController,
+                        decoration: const InputDecoration(
+                          labelText: 'Title',
+                        ),
+                      ),
+                      TextFormField(
+                        textAlign: TextAlign.center,
+                        controller: _grammarVideoUrlController,
+                        decoration: const InputDecoration(
+                          labelText: 'Video URL',
+                        ),
+                      ),
+                      TextFormField(
+                        style: const TextStyle(color: Colors.white),
+                        textAlign: TextAlign.center,
+                        controller: _grammarResourcesController,
+                        decoration: const InputDecoration(
+                          labelText: 'Resources',
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -152,6 +227,10 @@ class _AddUnitState extends State<AddUnit> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () async {
+                      final unitSnapshot = await FirebaseFirestore.instance
+                          .collection(widget.data)
+                          .doc(widget.unitId)
+                          .get();
                       if (_formKey.currentState!.validate()) {
                         DateTime now = DateTime.now();
                         String formattedDate =
@@ -165,10 +244,12 @@ class _AddUnitState extends State<AddUnit> {
                           'grammarVideoTitle':
                               _grammarVideoTitleController.text,
                           'vocabVideoTitle': _vocabVideoTitleController.text,
-                          'vocabTestId':
-                              '${_lessonTitleController.text.replaceAll(' ', '-')}-vocab-test-$formattedDate',
-                          'grammarTestId':
-                              '${_lessonTitleController.text.replaceAll(' ', '-')}-grammar-test-$formattedDate',
+                          'vocabTestId': _isEditing
+                              ? unitSnapshot.data()!['vocabTestId']
+                              : '${_lessonTitleController.text.replaceAll(' ', '-')}-vocab-test-$formattedDate',
+                          'grammarTestId': _isEditing
+                              ? unitSnapshot.data()!['grammarTestId']
+                              : '${_lessonTitleController.text.replaceAll(' ', '-')}-grammar-test-$formattedDate',
                         };
 
                         if (_isEditing) {

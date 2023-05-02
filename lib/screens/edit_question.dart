@@ -136,6 +136,13 @@ class _QuestionFormState extends State<QuestionForm> {
                       ),
                       const SizedBox(height: 10.0),
                       TextFormField(
+                        onTapOutside: (value) => setState(() {}),
+                        onFieldSubmitted: (value) {
+                          setState(() {
+                            _correctMessageController.text = value;
+                            _option1Controller.text = value;
+                          });
+                        },
                         controller: _option1Controller,
                         decoration: const InputDecoration(
                           labelText: 'Option 1',
@@ -149,6 +156,12 @@ class _QuestionFormState extends State<QuestionForm> {
                       ),
                       const SizedBox(height: 10.0),
                       TextFormField(
+                        onTapOutside: (value) => setState(() {}),
+                        onFieldSubmitted: (value) {
+                          setState(() {
+                            _option2Controller.text = value;
+                          });
+                        },
                         controller: _option2Controller,
                         decoration: const InputDecoration(
                           labelText: 'Option 2',
@@ -162,6 +175,10 @@ class _QuestionFormState extends State<QuestionForm> {
                       ),
                       const SizedBox(height: 10.0),
                       TextFormField(
+                        onTapOutside: (value) => setState(() {}),
+                        onFieldSubmitted: (value) => setState(() {
+                          _option3Controller.text = value;
+                        }),
                         controller: _option3Controller,
                         decoration: const InputDecoration(
                           labelText: 'Option 3',
@@ -175,6 +192,10 @@ class _QuestionFormState extends State<QuestionForm> {
                       ),
                       const SizedBox(height: 10.0),
                       TextFormField(
+                        onFieldSubmitted: (value) => setState(() {
+                          _option4Controller.text = value;
+                        }),
+                        onTapOutside: (value) => setState(() {}),
                         controller: _option4Controller,
                         decoration: const InputDecoration(
                           labelText: 'Option 4',
@@ -187,17 +208,36 @@ class _QuestionFormState extends State<QuestionForm> {
                         },
                       ),
                       const SizedBox(height: 10.0),
-                      TextFormField(
-                        controller: _answerController,
+                      DropdownButtonFormField(
                         decoration: const InputDecoration(
                           labelText: 'Correct answer',
                         ),
-                        validator: (value) {
-                          if (value?.trim().isEmpty == true) {
-                            return 'Please enter the correct answer';
-                          }
-                          return null;
+                        value: _answerController.text.isEmpty
+                            ? null
+                            : _answerController.text,
+                        onChanged: (value) {
+                          setState(() {
+                            _answerController.text = value.toString();
+                          });
                         },
+                        items: [
+                          DropdownMenuItem(
+                            value: _option1Controller.text,
+                            child: Text(_option1Controller.text),
+                          ),
+                          DropdownMenuItem(
+                            value: _option2Controller.text,
+                            child: Text(_option2Controller.text),
+                          ),
+                          DropdownMenuItem(
+                            value: _option3Controller.text,
+                            child: Text(_option3Controller.text),
+                          ),
+                          DropdownMenuItem(
+                            value: _option4Controller.text,
+                            child: Text(_option4Controller.text),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 10.0),
                       TextFormField(
