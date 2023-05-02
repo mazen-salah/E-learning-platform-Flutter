@@ -24,6 +24,8 @@ class _AddUnitState extends State<AddUnit> {
   final _grammarVideoUrlController = TextEditingController();
   final _vocabResourcesController = TextEditingController();
   final _grammarResourcesController = TextEditingController();
+  final _vocabVideoTitleController = TextEditingController();
+  final _grammarVideoTitleController = TextEditingController();
 
   bool get _isEditing => widget.unitId != null;
 
@@ -43,6 +45,8 @@ class _AddUnitState extends State<AddUnit> {
     _vocabResourcesController.dispose();
     _grammarVideoUrlController.dispose();
     _grammarResourcesController.dispose();
+    _vocabVideoTitleController.dispose();
+    _grammarVideoTitleController.dispose();
     super.dispose();
   }
 
@@ -62,6 +66,8 @@ class _AddUnitState extends State<AddUnit> {
       _vocabResourcesController.text = unitData['vocabResources'] ?? '';
       _grammarVideoUrlController.text = unitData['grammarVideo'] ?? '';
       _grammarResourcesController.text = unitData['grammarResources'] ?? '';
+      _vocabVideoTitleController.text = unitData['vocabVideoTitle'] ?? '';
+      _grammarVideoTitleController.text = unitData['grammarVideoTitle'] ?? '';
     } else {
       debugPrint('Error: Unit snapshot does not exist or has no data');
     }
@@ -106,6 +112,12 @@ class _AddUnitState extends State<AddUnit> {
                   },
                 ),
                 TextFormField(
+                  controller: _vocabVideoTitleController,
+                  decoration: const InputDecoration(
+                    labelText: 'Vocabulary Video Title',
+                  ),
+                ),
+                TextFormField(
                   controller: _vocabVideoUrlController,
                   decoration: const InputDecoration(
                     labelText: 'Vocabulary Video URL',
@@ -115,6 +127,12 @@ class _AddUnitState extends State<AddUnit> {
                   controller: _vocabResourcesController,
                   decoration: const InputDecoration(
                     labelText: 'Vocabulary Resources',
+                  ),
+                ),
+                TextFormField(
+                  controller: _grammarVideoTitleController,
+                  decoration: const InputDecoration(
+                    labelText: 'Grammar Video Title',
                   ),
                 ),
                 TextFormField(
@@ -144,6 +162,9 @@ class _AddUnitState extends State<AddUnit> {
                           'vocabResources': _vocabResourcesController.text,
                           'grammarVideo': _grammarVideoUrlController.text,
                           'grammarResources': _grammarResourcesController.text,
+                          'grammarVideoTitle':
+                              _grammarVideoTitleController.text,
+                          'vocabVideoTitle': _vocabVideoTitleController.text,
                           'vocabTestId':
                               '${_lessonTitleController.text.replaceAll(' ', '-')}-vocab-test-$formattedDate',
                           'grammarTestId':
@@ -155,9 +176,11 @@ class _AddUnitState extends State<AddUnit> {
                               .doc(widget.unitId)
                               .update(unitData);
                         } else {
+                          final unitsSnapshot = await gradeCollection.get();
+                          final unitsLength = unitsSnapshot.docs.length + 1;
                           await gradeCollection
-                              .doc(_lessonTitleController.text
-                                  .replaceAll(' ', '-'))
+                              .doc(
+                                  '$unitsLength-${_lessonTitleController.text.replaceAll(' ', '-').toLowerCase()}')
                               .set(unitData);
                         }
 

@@ -11,6 +11,8 @@ class LessonScreen extends StatefulWidget {
   final String lessonTitle;
   final String resources;
   final String testId;
+  final String videoTitle;
+
   bool questionsAvailable = false;
 
   LessonScreen(
@@ -18,7 +20,8 @@ class LessonScreen extends StatefulWidget {
       required this.videoUrl,
       required this.lessonTitle,
       required this.resources,
-      required this.testId})
+      required this.testId,
+      required this.videoTitle})
       : super(key: key);
 
   @override
@@ -100,6 +103,14 @@ class _LessonScreenState extends State<LessonScreen> {
                     ),
                   ],
                 ),
+                if (widget.videoTitle != '')
+                  Text(
+                    widget.videoTitle,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
+                  ),
                 Padding(
                   padding: const EdgeInsets.all(5.0),
                   child: player,

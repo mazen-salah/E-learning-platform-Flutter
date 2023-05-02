@@ -18,11 +18,13 @@ final Map<String, WidgetBuilder> routes = {
     final lessonTitle = args['lessonTitle'] as String;
     final resources = args['resources'] as String;
     final testId = args['testId'] as String;
+    final videoTitle = args['videoTitle'] as String;
     return LessonScreen(
       videoUrl: videoUrl,
       lessonTitle: lessonTitle,
       resources: resources,
       testId: testId,
+      videoTitle: videoTitle,
     );
   },
   '/test': (context) {

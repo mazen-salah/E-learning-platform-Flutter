@@ -98,6 +98,7 @@ class _UnitsScreenState extends State<UnitsScreen> {
                                                 ?.docs[index]['vocabResources'],
                                             'testId': snapshots.data
                                                 ?.docs[index]['vocabTestId'],
+                                                'videoTitle' : snapshots.data?.docs[index]['vocabVideoTitle'],
                                           },
                                         );
                                       },
@@ -129,6 +130,7 @@ class _UnitsScreenState extends State<UnitsScreen> {
                                                     ['grammarResources'],
                                             'testId': snapshots.data
                                                 ?.docs[index]['grammarTestId'],
+                                                'videoTitle' : snapshots.data?.docs[index]['grammarVideoTitle'],
                                           },
                                         );
                                       },

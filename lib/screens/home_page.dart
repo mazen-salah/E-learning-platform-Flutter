@@ -52,8 +52,8 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: [
           if (adminArray.contains(FirebaseAuth.instance.currentUser!.uid))
             ToggleButtons(
+              color: Colors.white,
               selectedColor: Colors.blue,
-              disabledColor: Colors.white,
               fillColor: Colors.transparent,
               splashColor: Colors.transparent,
               hoverColor: Colors.transparent,
@@ -123,7 +123,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     context: context,
                     builder: (BuildContext context) {
                       debugPrint(courses.toString());
-                      if (courses[index] == true) {
+                      if (courses[index] == true ||
+                          adminArray.contains(
+                              FirebaseAuth.instance.currentUser!.uid)) {
                         return AlertDialog(
                           title: Text(
                             snapshots.data?.docs[index]['name'],
