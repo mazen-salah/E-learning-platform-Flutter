@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 Center error() {
-  return Center(
+  return const Center(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: const [
+      children: [
         Text(
           'Can\'t connect to the database, please check your internet connection and try again.',
           style: TextStyle(color: Colors.white),

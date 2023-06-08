@@ -26,11 +26,11 @@ StreamBuilder<QuerySnapshot<Object?>> streamCollection(
           ),
         );
       } else if (snapshots.data!.docs.isEmpty) {
-        return Center(
+        return const Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+            children: [
               Icon(
                 Icons.error_outline_outlined,
                 size: 40,

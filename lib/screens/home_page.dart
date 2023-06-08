@@ -73,9 +73,9 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
           TextButton(
-            child: Row(
+            child: const Row(
               mainAxisSize: MainAxisSize.min,
-              children: const [
+              children: [
                 Icon(
                   Icons.wallet,
                   color: Colors.white,
